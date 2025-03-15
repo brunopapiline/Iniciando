@@ -1,3 +1,4 @@
+//Este código será subdivido e ajustado para obtermos cobertura total de todas as classes
 @isTest
 public class ComissionamentoTest {
 
