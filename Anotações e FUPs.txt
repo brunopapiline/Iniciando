@@ -870,3 +870,23 @@ Aprimoramento e otimização de processos.
 
 
 000007 - Cód do Janderson
+
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+15/03/25 - Querys
+
+Busca de Contas testes - Teste da atualização dos Owners
+SELECT Id, Name, CodigoVendedor__c, Owner.Name, Owner.Id  FROM Account WHERE Name Like 'Account Test%' ORDER BY Name asc
+
+Busca dos KPIs - Desenvolvimento em construção
+SELECT Id, Name, CreatedDate,DataInicio__c,DataFinal__c,EmAbertos__c,FechamentosGanhos__c,FechamentosPerdidos__c,
+MontanteComissionamento__c,TotalVendas__c,Owner.Name, OwnerId  
+FROM ComissionamentoPerformance__c
+
+Busca das opps testes criadas - Desenvolvimento em construção
+SELECT Id, Name, CodigoVendedor__c, Owner.Name, Amount, Account.Name, StageName, 
+ValorComissao__c, DescontoNegociacao__c,Desconto__c  
+FROM Opportunity 
+WHERE Name Like 'Test2 Opportunity%' 
+ORDER BY CreatedDate desc
+
