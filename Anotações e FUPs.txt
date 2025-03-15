@@ -890,3 +890,8 @@ FROM Opportunity
 WHERE Name Like 'Test2 Opportunity%' 
 ORDER BY CreatedDate desc
 
+Logs de integração
+SELECT Id, CreatedDate,Owner.Name,Type_Event__c,ResponseCode__c,Request_Object__c,Response_Object__c 
+FROM Integration_Event_Log__c 
+WHERE ResponseCode__c Like '40%' 
+ORDER BY CreatedDate desc
