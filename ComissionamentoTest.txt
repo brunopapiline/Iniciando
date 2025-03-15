@@ -1,0 +1,127 @@
+@isTest
+public class ComissionamentoTest {
+
+    @testSetup
+    static void setupTestData() {
+        String uniqueSuffix = String.valueOf(System.now().getTime());
+
+        Profile p = [SELECT Id FROM Profile WHERE Name = 'Custom Standard User' LIMIT 1];
+
+        User testUser = new User(
+            FirstName = 'Test',
+            LastName = 'User',
+            Username = 'testuser' + uniqueSuffix + '@test.com',
+            Email = 'testuser' + uniqueSuffix + '@test.com',
+            Alias = 'tstusr',
+            TimeZoneSidKey = 'America/Los_Angeles',
+            LocaleSidKey = 'en_US',
+            EmailEncodingKey = 'UTF-8',
+            ProfileId = p.Id,
+            LanguageLocaleKey = 'en_US',
+            CodigoVendedor__c = 'VND001',
+            RepresentanteComercial__c = true
+        );
+        insert testUser;
+
+        Integer accCont = 0;
+        Integer n = 5;
+        List<Account> accListTest = new List<Account>();
+        
+        for(Integer i = 1; i <= n; i++) {
+            accCont++;
+            Account testAccount = new Account(
+                Name = 'Test Account ' + accCont, 
+                CodigoVendedor__c = 'VND001', 
+                OwnerId = testUser.Id
+            );
+            accListTest.add(testAccount);
+        }
+        insert accListTest;
+
+        System.runAs(testUser) {
+            List<Opportunity> oppListTest = new List<Opportunity>();
+            for (Account acc : accListTest) {
+                oppListTest.add(new Opportunity(
+                    Name = 'Test Opportunity Won 1', 
+                    StageName = 'Closed Won', 
+                    Amount = 5000, 
+                    CloseDate = Date.today().addDays(30), 
+                    OwnerId = testUser.Id, 
+                    AccountId = acc.Id));
+                oppListTest.add(new Opportunity(
+                    Name = 'Test Opportunity Won 2', 
+                    StageName = 'Closed Won', 
+                    Amount = 6000, 
+                    CloseDate = Date.today().addDays(30), 
+                    OwnerId = testUser.Id, 
+                    AccountId = acc.Id));
+                oppListTest.add(new Opportunity(
+                    Name = 'Test Opportunity Won 3', 
+                    StageName = 'Closed Won', 
+                    Amount = 7000, 
+                    CloseDate = Date.today().addDays(30), 
+                    OwnerId = testUser.Id, 
+                    AccountId = acc.Id));
+                oppListTest.add(new Opportunity(
+                    Name = 'Test Opportunity Lost', 
+                    StageName = 'Closed Lost', 
+                    Amount = 4500, 
+                    CloseDate = Date.today().addDays(30), 
+                    OwnerId = testUser.Id, 
+                    AccountId = acc.Id));
+                oppListTest.add(new Opportunity(
+                    Name = 'Test Opportunity Risk', 
+                    StageName = 'Análise de Risco', 
+                    Amount = 4800, 
+                    CloseDate = Date.today().addDays(30), 
+                    OwnerId = testUser.Id, 
+                    AccountId = acc.Id));
+            }
+            insert oppListTest;
+        }
+    }
+
+    @isTest
+    static void testComissionamentoPerformance() {
+        List<User> userList = [SELECT Id FROM User WHERE RepresentanteComercial__c = true LIMIT 1];
+        System.assert(!userList.isEmpty(), 'Nenhum usuário Representante Comercial encontrado.');
+        User u = userList[0];
+
+        List<Opportunity> oppList = [SELECT Id, OwnerId, StageName FROM Opportunity WHERE OwnerId = :u.Id LIMIT 1];
+        System.assert(!oppList.isEmpty(), 'Nenhuma oportunidade foi encontrada para o usuário de teste.');
+        Opportunity opp = oppList[0];
+
+        opp.StageName = 'Closed Won';
+        update opp;
+
+        Test.startTest();
+        ComissionamentoPerformace.saleUserList(new List<Opportunity>{opp});
+        Test.stopTest();
+
+        List<ComissionamentoPerformance__c> cpList = [
+            SELECT Id, OwnerId FROM ComissionamentoPerformance__c WHERE OwnerId = :u.Id
+        ];
+        System.assert(!cpList.isEmpty(), 'O registro de ComissionamentoPerformance deveria ter sido criado.');
+    }
+
+    @isTest
+    static void testComissionamentoScheduler() {
+        List<User> userList = [SELECT Id FROM User WHERE RepresentanteComercial__c = true LIMIT 1];
+        System.assert(!userList.isEmpty(), 'Nenhum usuário Representante Comercial encontrado.');
+
+        User u = userList[0];
+
+        delete [SELECT Id FROM ComissionamentoPerformance__c WHERE OwnerId = :u.Id];
+
+        Test.startTest();
+        ComissionamentoScheduler scheduler = new ComissionamentoScheduler();
+        scheduler.execute(null);
+        Test.stopTest();
+
+        List<ComissionamentoPerformance__c> cpList = [
+            SELECT Id, OwnerId FROM ComissionamentoPerformance__c WHERE OwnerId = :u.Id
+        ];
+        
+        System.assert(!cpList.isEmpty(), 'Registros de ComissionamentoPerformance deveriam ter sido criados.');
+    }
+}

@@ -1,0 +1,872 @@
+Git
+
+
+0/10/24 - Atividades de DEV
+
+1- Excluído o Campo em Conta - Codigo_do_Vendedor__c (fórmula)
+2- Criado o Campo em Product2 - Cubagem do SKU - CubagemSKU__c
+3- Criado o trigger flow em OpportunityLineItem - Arredondando Multiplo
+4- Criado o campo em Opportunity - Cubagem Estimada - CubagemEstimada__c
+5- Criado o campo em Opportunity - Custo dos Produtos - CustoProdutos__c
+6- Criado o trigger flow em OpportunityLineItem - CustoProdutos
+7- Atualizada a Label do campo Margem de Contribuição para Lucro Bruto
+no objteo Opportunity - MargemContribuicao__c
+8- Criado o campo em Opportunity - Valor do Frete - ValorFrete
+9- Criado o campo em Opportunity - Margem de Contribuição - Margem_de_Contribuicao__c
+10- Atualizada o Lightning Page Account - Account Record Page - Three Column
+
+
+--------------------------------------------------------------------------------------------------------------------------------
+
+19/11/24 - Pauta com os Devs
+
+1- Desconto total dos itens na tela de selação do produto (Validar técnicamente e o esforço)
+2- Levantar o impacto na tela do resumo das linhas de produto, a questão das edições e possibilidade do desconto geral
+(para apresentar ao cliente)
+3- Bug na tela ao voltar para a edicao dos produtos (lentidao)
+4- Duvida sobre a pre reserva
+5- Cabeçalho em cada tela que precisam ser ajustados
+6- Organizar a sequência
+
+-----------------------------------------------------------------------------------------------------------------------------------
+
+21/01/24 - Reunião com o Cliente - Tela de Transporte e Condição de pagamento Parte 1
+
+1- New Request - (Alto Impacto) API da Receita Federal (Atentar) - Ok
+2- New Request (Baixo impacto) Add o Campo Total - Desconto - Ok
+3- Não está definido o valor do frete???? (definição interna da Brasilux)
+4- New Request - (Baixo Impacto)Caso seja CIF somar o valor do frete no Amount - OK
+5- New Request - (Baixo Impacto) Não mostrar o valor da receita líquida pro 
+representante e também o valor de margem, OBS. não constar no fluxo - OK
+6- New Request - (Baixo Impacto) Cubagem do pedido será o somatório das cubagens em cm³ - ok
+7- New Request - (Baixo Impacto) Quantidade em volumes em Litros - ok
+8- New Request - (Médio Impacto) Criação de objeto relacionado com a conta Endereço de entrega para que seja feito o lookup
+no momento do preenchimento do pedido (em validação técnica e avaliando impacto) (Default) - ok
+9- New Request - (Médio Impacto) Retomar o Fluxo Vendas Brasilux (Importante para o Go Live) na fase do orçamento e pré-pedido - ok
+10- New Request - (Médio Impacto) Criar as formas de pagamento no salesforce (cliente enviará as formas de pagamento) - ok
+11- New Request - (Alto Impacto) Alteração na regra de negócio da reserva (avaliar)
+12- New Request - (Médio Impacto) Ação de alterar o status submeter para aprovação 
+na fase final de alteração do fluxo Vendas Brasilux
+
+------------------------------------------------------------------------------------------------------------------------------------
+
+22/11/24 - Reunião com o Cliente - Tela de Transporte e Condição de pagamento Parte 2
+
+13- New Request - (Alto Impacto) - Frete CIF deve estar amarrado à 500km do centro de distribuição
+	13.1- Entendimento da Regra de negócio
+	13.2- Viabilização dos valores de campo no momento da chamada
+14- New Request - (Alto Impacto) - Integração das condições de pagamento com o Protheus - API ainda sendo desenvolvida - ok
+15- New Request - (Alto Impacto) - Parametrização das formas de pagamento e condições de pagamento - ok
+
+-------------------------------------------------------------------------------------------------------------------------------------
+
+26/11/24 - Reunião - Alinhamento com o Cliente
+
+D1- Algum campo da API já apresenta a cubagem do SKU?
+D2- A cubagem está relacionada à unidade ou à amarração de seu múltiplo?
+D3- Algum campo da API já apresenta a Litragem do SKU?
+D4- A Litragem está relacionada à unidade ou à amarração de seu múltiplo?
+D5- Esses campos estão sendo devolvidos como nulos ou zerados, será necessário o preenchimento destes para validação.
+
+
+-------------------------------------------------------------------------------------------------------------------------------------
+
+26/11/24 - Validações e Arquitetura
+
+VA1- Ajuste na chamada da API de imposto para alimentar os campos de produto;
+VA2- Criação das subtarefas de endereçamento (Esforço, alocação e inserção no cronograma);
+VA3- Análise de prirização e despriorização de tarefa;
+VA4- Request - Inclusão da linha do produto no array; (Integração da reserva de produto); (Validar, avaliar esforço)
+VA5- Request - Parametrização da tabela do valor de frete tipo CIF (Transportadora própria Brasilux); (Validar, avaliar esforço)
+VA6- Request - Incluir a possibilidade de dosconto linha à linha na fase de edição dos produtos;
+
+-----------------------------------------------------------------------------------------------------------------------------------------
+
+27/11/24 - Refinamento da API de Produtos
+
+{
+            "Sku": "AC 400800101",
+            "DescricaoDoSku": "MARFIM ACETINADO",
+            "ProdutoBloqueado": true,
+            "TipodeProduto": "PA",
+            "PodeVender": "N",
+            "LoteMinimo": 60,
+            "QtdVolume": 0,
+            "UnidadeDeMedida": "UN",
+            "LocalPadrao": "P2",
+            "GrupoDoProduto": "PA40",
+            "IpiNcm": "32089010",
+            "Grupo2DoProduto": "I1",
+            "ExNcm": "",
+            "AliqIpi": "",
+            "SegUnMedi": "L",
+            "SolidSaida": "",
+            "FatorConv": "",
+            "TipodeConv": "M",
+            "PesoLiquido": "",
+            "PesoBruto": "",
+            "Origem": "0",
+            "UltProcessamento": "2024/06/12",
+            "PorcentagemDeComissao": "",
+            "GrupoTributario": "001",
+            "QtDeVolume": "",
+            "Catalisador": "",
+            "RelacaoDeVolumes": "",
+            "Pestoque": "N",
+            "CodigoGTIN": "7893866666892",
+            "DataAtualizacao": "2023/02/01",
+            "ComprimentoArmazenagem": "",
+            "LarguraArmazenagem": "",
+            "AlturaArmazenagem": ""
+        }
+		
+--------------------------------------------------------------------------------------------------------------------------------------
+
+04/12/24 - Reunião com o Grecco
+
+1- Go live Simone - Representante Mundo - Correção - Janderson 
+2- Go live Franciele - Comercio Comercio Nacional - Correção - Janderson
+3- Go live Criar a Role vendas interna (Solicitar todas as funções ao cliente) - New/Change Request - Janderson
+4- Trazer todos os pedidos na clonagem - New/Change Request - Luiz
+5- Amarrar à tabela genérica (Bloqueado) - New/Change Request - Luiz
+6- Add o SKU em cima do nome na tela de edição de quantidades e preço - New/Change Request - Luiz
+7- Edição somente das quantidades tela de edição de quantidades e preço - New/Change Request - Avaliando
+8- Go live Add o campo desconto total e valor total - New/Change Request - Luiz
+9- Go live Verificar se há um erro na chamada para o estoque de Araraquara 
+(debugar para checar se há um erro do lado do Salesforce)- Correção - Luiz
+10- Go live Resolver o BUG de não gerar o valor mínimo - Correção - Luiz
+11- Go live Colocar a Label da tela de transporte e condição de pagamento no header nos flows - Correção - Janderson
+12- Alterar a Data de retirada para data programada na tela de pagamento e frete este campo 
+consta na API de pedido (Bloqueado)- New/Change Request - Arhtur e Luiz
+13- Go live 100% do CIF será a transportadora Brasilux - Correção - Arhtur
+14- Go live Remover o texto da caixa de transporte na tela de pagamento e frete - Correção - Arhtur
+15- Go live Quando volta na tela de transporte e pagamento dá erro na tela - Correção - Arhtur
+16- Na segunda e terceira tela trazer no erro o SKU do produto (Validar) - New/Change Request - Avaliando
+17- Enviar direto submneter para aprovação, enviar o cliente para aprovação o orçamento 
+(obs.: todos enviam o pdf para o cliente) - New/Change Request - Luiz
+18- Caso de alteração iniciar o fechado perdido da cotação e iniciar um novo atendimento com a 
+clonagem das linhas anteriores - New/Change Request - Luiz
+19- Go live Resolver o BUG da sequencia da tela de pagamento e frete quando volta a tela - Correção - Arhtur
+20- Em caso de redespacho, haver o campo do endereço da transportadora além do campo do destino - New/Change Request - Arhtur
+21- Go live Possibilitar a seleção do local de entrega, possibilitando a troca via picklist - Correção - Arhtur
+22- Go live Colocar a Label da tela de transporte e condição de pagamento no header nos LWC - Correção - Arhtur e Luiz
+23- Ajuste na API do pedido informando o endereço do redespacho - Luiz
+24- Parametrizar a informação de redespacho no Salesforce - Janderson
+25- Add e atualizar os registros das transportadoras com os códigos do Id externo e 
+validar quais são as transportadoras de redespacho - Janderson
+26- Go live Criar o campo de ativo e desmarcar o campo para os registros que não estão mais vigentes - New/Change Request - Janderson
+27- Go live Filtrar os registros que estarão ativos das condições de pagamento no LWC - New/Change Request - Arthur
+
+--------------------------------------------------------------------------------------------------------------------------------------------------------
+06/12/24 - Reunião sobre a tabela genérica
+
+R1- O combo da tabela genérica traz o valores de todos os CDs;[RESOLVIDO]
+R2- Possibilitar a clonagem de pedido de qualquer cliente da carteira com limitação de 3 meses;
+R3- Somente as contas que estão vinculadas ao código do vendedor;
+
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------
+10/12/24 - Arquitetura
+
+S1- Remodelagem do fluxo da colocada de pedido: 
+	S1.1- Na primeira tela se é cotação ou um pré-pedido; 1h
+	S1.2- Chamada da API de reserva após a tela de resumo das linhas de produto
+	obs.: somente fazer a chamada caso seja selecionada a opção pré-pedido na primeira tela; 3h
+	S1.3- Marcação da flag de reserva e alimentação do campo do percentual de reserva
+	obs.: vamos criar este campo para fazer o de para; 1h
+	S1.4- Desativação da Batch + Schedulle da chamada de reserva; 1h
+	
+	
+--------------------------------------------------------------------------------------------------------------------------------------------
+
+	11:12:10:006 SOQL_EXECUTE_BEGIN [168]|Aggregations:
+	0|SELECT Id, Product2Id, Product2.Name, Product2.ProductCode, Product2.Multiplo__c, Product2.Imagem_do_ProdutoURL__c, Product2.StockKeepingUnit, 
+	Product2.QuantidadeMinima__c, UnitPrice, Pricebook2Id 
+	FROM PricebookEntry 
+	WHERE (Pricebook2Id = :tmpVar1 AND IsActive = TRUE) 
+	ORDER BY Id ASC NULLS LAST 
+	LIMIT :tmpVar2 OFFSET :tmpVar3
+
+------------------------------------------------------------------------------------------------------------------------------------------------
+
+ER1- Nas quantidades inicia fora do múltiplo e ainda não esbarra para avançar a tela;[RESOLVIDO]
+
+ER2- A quantidade Default está incoerente com a quantidade múltipla;[RESOLVIDO]
+
+ER3- Validar as tabelas de preços vigentes;[RESOLVIDO]
+
+ER4- A quantidade Default está incoerente com a quantidade mínima;[RESOLVIDO]
+
+ER5- processo de aprovação não está sendo acionado; (Fluxo Submeter Aprovação - V2);[RESOLVIDO]
+	You can’t activate this flow until you resolve 2 errors.
+	Status
+	AnalisePolitica (Decision Outcome) - A condition doesn't support null None. Remove the condition or enter a resource.
+	AnaliseCreditoRisco (Decision Outcome) - A condition doesn't support null None. Remove the condition or enter a resource.
+	
+ER6- Está quebrando a API de imposto devido o retorno da API da TES retornar nulo;[RESOLVIDO]
+
+ER7- Não está barrando os pré-pedidos/ orçamento com Amount < 1500;[RESOLVIDO]
+
+---------------------------------------------------------------------------------------------------------------------------------------------------
+
+Produto	Qtd	Preço	% Desc	Lista	Último Preço	Estoque	
+KT 031500126
+
+
+--------------------------------------------------------------------------------------------------------------------------------------------------------
+
+MVP
+
+ Viabilizar a digitação do Orçamento, com a escolha do emissor (Brasilux/Dissoltex), seleção da lista de preço e Centro de Distribuição atrelado; ok
+
+ Escolha dos produtos, quantidades e descontos por linha de produto; ok
+
+ Integração com APIs de Consulta de Estoque, Reserva de Produtos, Cálculo de Impostos e Transportadoras e Rotas (será desenvolvido após a implementação d TMS); ok
+
+ Aprovação de Políticas Comerciais, Crédito e Risco; ok
+
+ Integração com API de envio de pedido aprovado para o ERP Protheus; ok
+
+
+
+ Upgrade 1 - Segmentação da gestão comercial para cruzamento das bases: 
+
+ Oportunidades (fechadas ganhas, fechadas perdidas e em aberto)
+
+ Carteira de clientes  “Contas”(novos, ativos, inativos, setor)
+
+ Representações (indicadores regionais em geral)
+ Obs.: Esta configuração está na fila de desenvolvimento, pois é importante objeter a fase 1 do Sales Cloud MVP em Produção.
+
+
+ Upgrade 2 - Automações e Integrações:
+
+ Integrar a chegada dos dados de Lead, contato e conta e direcionamento automático para as bases regionais, Necessário API do RD Station e definição da regra de negócio.
+
+ Integrar as informações dos produtos, tais como estoque e novas linhas; ok
+
+ Cruzamento do forecast de manufatura com vendas, Necessário integrar o salesforce com o sistema de Faturamento.
+ 
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------
+ 
+ implantação e customização da ferramenta de CRM Salesforce Sales
+
+Cloud, para atender aos requisitos da Brasilux, no tocante a representar sua estrutura de vendas, o que
+
+significa ter suas divisões em regiões cadastrada, bem como seus respectivos representantes, interface
+
+para cadastrar e gerir sua lista de produtos e preços, ter seu processo de vendas passando pelas
+
+políticas de Vendas, Crédito e Risco, a geração do pedido com interface para o ERP Microsiga, da TOTVS
+
+que é responsável por sensibilizar as demais áreas da companhia, como Financeiro e Produção, bem
+
+como o sistema de WMS, responsável por gerir estoque.
+
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+02/01/25 - Checagem do Sistema
+
+C1- Precisa ajustar o valor do total de desconto + a porcentagem;[RESOLVIDO]
+	R1- Criação do campo que calcula a diferença do valor de lista com o Amount;[RESOLVIDO]
+	Obs.: Este campo deverá ser ultilizado na tela de pagamento no total de desconto.
+	
+C2- Precisa trazeer a porcentagem de desconto total ao lado do campo que possue o valor;
+	R2- Campo já existente.
+	
+C3- Campo Itens__c e Valor_do_Desconto__c em Opportunity (Atendimento) estão sem permissão;
+	R3- Montar o pacote do profile e subir para os ambientes.
+	
+C4- Tabelas de preço do emissor Dissoltex não está devolvendo os produtos(Dissoltex Padrão, Dissoltex Campanha Vendas e Araraquara);
+	Obs.: Ao selecionar as tabelas Genérica com qualquer um dos CD's e/ou Guarulhos está devolvendo os produtos normalmente.
+	
+
+---------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+07/01/25 - Ajustes para o Go Live
+
+Tópico1- Alterar o sincronismo de produto para não disponibilizar os produtos que não podem ser vendidos, Produto Bloqueado = false e Pode Vender = N; (validado);[RESOLVIDO]
+Tópico2- Os processos de agendamentos já estão criados, somente não estavam rodando em ambiente não produtivos.[RESOLVIDO]
+Mas ativamos estes para os seguintes horários; 
+Tabelas de preço quando são criadas, são puxadas via Batch todos os dias no final do dia. 
+	1º Atualização de lista de preço as 20:00; menos de 1 minuto
+	2º Atualização de produto as 20:00; entorno de 30 minutos
+	3º Atualização de preço as 21:00; entorno de 30 minutos
+Tópico3- Reserva de produtos precisar ser corrigida devido a criação do submeter para aprovação no inicio do fluxo;[RESOLVIDO]
+
+--------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+09/01/25 - Testes em UAT
+
+ER1- Saquad - Verificar o porque este sku não está retornando em PREUATe DEV BM 003211188; (Luiz) vai colocar as cadeias pra rodar em todos os ambientes.[RESOLVIDO]
+ER2- Saquad - Remover o nome do cliente na coluna de produto; (Arthur) - Subir pra UAT e Preuat [RESOLVIDO]
+ER3- Saquad - Está quebrando a clonagem de pedido, pois não trás o CD; (Luiz) - Está verificando o time do spinner com auxilio do Arthur. [MITIGADO]
+ER4- Saquad - Criar uma bacth para um novo callout para os pedidos que não foram processados por motívos de erro; (Luiz) vai mapear os erros que podem ter novas tratativas.[RESOLVIDO]
+ER5- Saquad - Criar uma bacth para um novo callout para a reserva que não foram processados por motívos de erro; (revisar a arquitetura de reservas e cancelamento das mesmas.
+(Luiz) vai mapear os erros que podem ter novas tratativas.[RESOLVIDO]
+ER6- Saquad - Trazer a mensagem de erro da integração para uma descrição de erro no Atendimento/Opportunidade, e, possibilitar a edição;
+Nos casos de erro no processamento do pedido por motivo de valor de campo.[MODELANDO]
+Obs1- Validar com eles quais campos podem ser editados pelo vendedor no cenário ER6, que não terão peso para um novo ciclo. Brasilux
+Obs2- Saquad - Validar técicamente qual status se dará para possibilitar a edição por parte do venndedor. Fernanda [MODELANDO]
+ER7- Saquad - Arrumar a triggagem da reserva de produto; (ajustado) só falta subir para os ambientes. (esperando a API voltar para testar novamente.[RESOLVIDO]
+ER8- Requisitar a alimentação do ICMS dentro da conta no momento do cadastro; Caso não seja possível, criar uma classe apex / obrigar o preenchimento de campo.
+para que alimente o campo com a porcentagem de acordo com cada estado. (Brasilux) [MITIGADO]
+ER9- Ajuste dos layouts Opportunidade/Account; (Janderson) equalizar os ambientes.[EM DESENVOLVIMENTO]
+ER10- Saquad - Ajuste da Homme, com os indicadores das opps + ultimas atualizações dos registros; (janderson) [EM DESENVOLVIMENTO]
+ER11- Atualização da hirarquia + atribuição das funções; (Janderson) [EM DESENVOLVIMENTO]
+ER12- Saquad - Ajuste do layout de aprovação; (Bruno)[EM DESENVOLVIMENTO]
+ER13- Saquad - Reverter o valor default para o campo quantidade mínima; (Arthur) retornar a quantidade mínima como valor default.[RESOLVIDO]
+ER14- Saquad - Não está gravando a linha de produto quando é feita a pesquisa após uma novas seleção; (Luiz) já está sendo ajustado.[RESOLVIDO]
+ER15- Saquad - Validar se o email tá sendo disparado ao clicar enviar PDF; (Bruno)[EM DESENVOLVIMENTO]
+ER16- Saquad - Delay alto ao enviar os produtos para a tela de edição de quantidades e preços; (Acompanhar isso e contatar o cliente).[MITIGADO]
+ER17- Validar a possibilidade de cancelamento do pedido no lado do protheus; (Solicitar à Brasilux);[MODELANDO]
+ER18- Saquad - Imputar o ICMS das contas em produtção, de acordo com a tabela vigente. (Squad).[MITIGADO]
+
+MG, PR, RS, SC, RJ
+
+---------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+14/01/25 - Testes
+
+ER19- Saquad - Não está salvando a transportadora que está sendo preenchida no fluxo de colocada de pedido;[RESOLVIDO]
+ER20- Saquad - Não está printando o pdf na ultima tela do fluxo em DEV;[RESOLVIDO]
+ER21- Saquad - Remover de todos os ambientes o campo texto transportadora pois este era um campo de ensaio, e, disponibilizar o campo correto Transportadora Associada;[EM DESENVOLVIMENTO]
+ER22- Soicitar limpeza de dados que estão inativos, bloqueados ou com algum impeditivo; Conta (ex. Loja inválida), Produto(inválido), [MITIGADO]
+Transportadora (ex. Transportadora Bloqueada) e Condições de Pagamento (cliente informou que há opções que não estão mais vigentes).
+ER23- Saquad - Corrigir  filtragem das picklists de país e estado no componente preencher um novo endenreço de entrega (penúltima tela do fluxo); [EM DESENVOLVIMENTO]
+
+
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+Linha 45689
+Cliente: Testil Tecnicor LTDA
+Cód: 53655
+
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+21/01/25 - Mapeamento dos Riscos
+
+MP1- Nos testes todas as chamadas com sucesso, não possuem os produtos reservados;
+	Plano 1 MP1- Precisamos validar com os dados reais, considerando o processo do Protheus hoje, para que possamos customizar a solução de acordo com processo interno.
+	(Necessário convocarmos uma agenda para refinarmos a solução)
+MP2- Alta taxa de erros por incopatibilidade de dados, por estarem inativos e bloqueados, nas chamadas de Impostos e Pedidos;
+	Plano 1 MP2- Extraírmos os dados incompatíveís que apresentaram erros, e, equalizar os sistemas;
+	Plano 2 MP2- Ajustes das APIs de atualização de clientes, atualização da coluna de restrições da Transportadora e das condições de pagamento que estão inativos.
+MP3- Necessário uma modelagem de cancelamento de pedido;
+	Plano 1 MP3- Brailux listar os principais motivos de cancelamento de pedido, para que possamos custmizar as tratativas dessas excessões.
+MP4- Não ensaiado o cenário de fatia de pedidos, checar um imput de estoque, juntamente com as premissas da regra em questão.
+	Plano 1 MP4- Nessário os testes em um cenário mais próximo do real, para que seja verificado os cenários das fatias de pedidos quando são acionados
+MP5- Cadasttrar o cliente criado no Salesforce no Protheus, pois as integrações da TES, Impostos, Reverva e Pedido é necessário o External Id do Protheus.
+	Plano 1 MP5- API do Protheus de cadastro e callout do lado do Salesforce.
+	
+---------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+23/01/25 - Lista de pendencias
+
+ER24- Quando dois usuários em simultâneo estão ultilizando o fluxo, está bugando com cruzamento de informações;[RESOLVIDO]
+ER25- Recall de imposto, ajutar na própria classe;
+ER26- Integrações da Filial Dissoltex encontra-se com erro, tais com produtos não cadastrados, vendedores não autorizados e informações da Dissoltex incompátíveis;
+
+---------------------------------------------------------FOLLOW UP-------------Até 26/01/25----------------------------------------------------------------------------
+
+27/01/25 - Levantamento de Pendências
+
+C2- Precisa trazeer a porcentagem de desconto total ao lado do campo que possue o valor; (Luiz)[Pós GoLive]
+	R2- Campo já existente.
+	
+C4- Tabelas de preço do emissor Dissoltex não está devolvendo os produtos(Dissoltex Padrão, Dissoltex Campanha Vendas e Araraquara);(Brasilux)[Testando]
+	Obs.: Ao selecionar as tabelas Genérica com qualquer um dos CD's e/ou Guarulhos está devolvendo os produtos normalmente.
+	
+ER6- Trazer a mensagem de erro da integração para uma descrição de erro no Atendimento/Opportunidade, e, possibilitar a edição;(Bruno)[Fila de Desenvolvimento]
+Nos casos de erro no processamento do pedido por motivo de valor de campo.
+Obs1- Validar com eles quais campos podem ser editados pelo vendedor no cenário ER6, que não terão peso para um novo ciclo. Brasilux
+Obs2- Validar técicamente qual status se dará para possibilitar a edição por parte do venndedor. 
+
+ER9- Ajuste dos layouts Opportunidade/Account; equalizar os ambientes.(Squad)[Fila de Desenvolvimento]
+Ajuste da Homme, com os indicadores das opps + ultimas atualizações dos registros;
+
+ER11- Atualização da hirarquia + atribuição das funções; (Janderson) [Em Desenvolvimento]
+
+ER12- Ajuste do layout de aprovação; (Janderson)[Validando]
+
+ER15- Validar se o email tá sendo disparado ao clicar enviar PDF; (Squad)[Fila de Teste / Pós Deploy]
+
+ER17- Validar a possibilidade de cancelamento do pedido no lado do protheus; (Solicitar à Brasilux);()[Validar]
+
+ER21- Remover de todos os ambientes o campo texto transportadora pois este era um campo de ensaio, e,
+disponibilizar o campo correto Transportadora Associada;(Janderson)[Em Desenvolvimento]
+
+MP1- Nos testes todas as chamadas com sucesso, não possuem os produtos reservados;(Brasilux)[Em Testes]
+	Plano 1 MP1- Precisamos validar com os dados reais, considerando o processo do Protheus hoje, para que possamos customizar a solução de acordo com processo interno.
+	(Necessário convocarmos uma agenda para refinarmos a solução)
+	
+MP2- Alta taxa de erros por incopatibilidade de dados, por estarem inativos e bloqueados, nas chamadas de Impostos e Pedidos;(Brasilux)[Em Testes]
+	Plano 1 MP2- Extraírmos os dados incompatíveís que apresentaram erros, e, equalizar os sistemas;
+	Plano 2 MP2- Ajustes das APIs de atualização de clientes, atualização da coluna de restrições da Transportadora e das condições de pagamento que estão inativos.
+	
+MP3- Necessário uma modelagem de cancelamento de pedido;(Bruno)[Validar]
+	Plano 1 MP3- Brailux listar os principais motivos de cancelamento de pedido, para que possamos custmizar as tratativas dessas excessões.
+
+MP4- Não ensaiado o cenário de fatia de pedidos, checar um imput de estoque, juntamente com as premissas da regra em questão.(Brasilux)[Pós Deploy]
+	Plano 1 MP4- Nessário os testes em um cenário mais próximo do real, para que seja verificado os cenários das fatias de pedidos quando são acionados
+	
+MP5- Cadasttrar o cliente criado no Salesforce no Protheus, pois as integrações da TES, Impostos, Reverva e Pedido é necessário o External Id do Protheus.(Squad)[Validar]
+	Plano 1 MP5- API do Protheus de cadastro e callout do lado do Salesforce.
+	
+ER25- Recall de imposto, ajutar na própria classe;(Fernanda)[Em Desenvolvimento]
+
+ER26- Integrações da Filial Dissoltex encontra-se com erro, tais com produtos não cadastrados, vendedores não autorizados e informações da Dissoltex incompátíveis;(Squad)[Em Testes]
+
+ER27- Preenchimento do CD na tela de de pagamento e frete; (Arthur) [Em Desenvolvimento]
+
+ER28- COnfiguração do Sharing Settings para a limitação das contas com os códigos dos vendedores; (Bruno) [Modelando]
+
+
+
+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+30/01/25 - Comissão de desenvolvimento
+
+1- Integração com o TMS (roteirização e simulação de frete);
+
+2- Integração com o WMS (trabalhar agendamento de manufatura);
+
+3- Integração com RD Station;
+	3.1- Configuração do objeto Campanha;
+	3.2- É uma automação da captação com Lead e redirecionamento para as base de tratamento;
+	
+4- Integração com o Faturamento;
+	4.1- Recebemento do status do pedido;
+	4.2- Recebimento das documentações;
+
+5- Relatórios e Dashboards, são 10 tópicos no total, todos alencados ao faturamento;
+
+6- Configuração da segmentação regional;
+
+7- Fatia do pedido (integração e customização);
+
+9- Integração de envio do cadastro de clientes ao Protheus;
+
+10- Integração com a Receita Federal;
+
+11- Modelagem e execução da chamada de cancelamento do pedido;
+
+12- Monitoramento da previsão do comissionamento. (Atividade depende da Integração com faturamento)
+
+13- Automação e configuração para aprovações automáticas e aprovação em lote;
+
+---------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+https://salesforce.stackexchange.com/questions/107095/callouts-bulkification-in-triggers?newreg=075f2d40662d4a91affdb632308eaf18
+
+---------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+17/02/25 - Reunião Técnica com a Brasilux
+
+P1- Via SFA está calculando imposto e gerando o pedido?
+
+---------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+18/02/25 - Ajuste do desenvolvimento dos Owners
+
+Lembrete 1- Código de vendedor válido para testar as integrações, no usuário Bruno Hernandes = 000739
+
+
+Debug para o desenvolvimento do Owner
+ and Owner.Name ='Rodrigo Grecco'
+--------------------------------------------------------------------------------------
+
+List<Account> accList = new List<Account>();
+Integer n = 10000; 
+
+for (Integer i = 1; i <= n; i++) {
+    Account acc = new Account(Name = 'Alta Carga Ajustada Owner Deploy Test' + i, 
+                              CodigoVendedor__c = '123456');
+    accList.add(acc);
+}
+
+Database.insert(accList, false); 
+
+
+System.debug('Debug accList : ' + accList);
+
+----------------------------------------------------------------------------------------
+
+Erro: Line: 26, Column: 1
+System.LimitException: Too many DML rows: 10001
+
+
+---------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+20/02/25 - Reunião Técnica (Protheus)
+
+
+Tópico 1 - A carga da massa de dados dos clientes sendo executada de maneira mecânica terá impacto de equalização entre sistemas;
+Recomendação - Modelagem de atualização de acordo com um período viável determinado pelo cliente.
+
+Tópico 2 - Nas execuções, serão contemplados todos os clientes, alimentando a base com dados que não serão operados;
+Recomendação - Fitrar os clientes apenas que pussem donos de conta ativos, pois haverá alterações de dados e consumo de requisições no sistema;
+
+Tópico 3 - Serviço das APIs indisponíveis para as validações dos desenvolvimento e de testes;
+Recomendação - Disponibilizar uma janela diária pelo qual será habilitada.
+
+Tópico 4 - Checar diligência do Protheus nos casos que a reserva é enviada porém não consolidada, 
+pois não há uma ação de retonor no Salesforce na arquitetura atual;
+Recomendação - Validação se está sendo tratada a reserva de maneira que esteja atendendo o processo da Brasilux, 
+ou modelagem da ação que deva ser tomada para o caso em questão.
+
+Tópico 5 - API da tabela de preço não constam as informações de período de viGência, nem campo de tabela ativa;
+Recomendação - Inclusão destes campos na API para que seja fidedigno ao processo, pois caso o callout tenha o retorno nulo, 
+será desailitada a tabela no Salesforce.
+
+Tópico 6 - Alta taxa de inconsistências de valores, e/ou, quebra de regra de negócios (Code Response 400 - 499);
+Recomendação 1 - Ensaio de testes com os mesmos imputs feitos no Salesforce, no SFA para fins de mapeamento das inconscistências.
+Recomendação 2 - Checagem de regras devalidações configyradas no Protheus, tais quais possam barrar a aceitação do cáluculo de imposto, reserva e pedido.
+Uma vez encontradas, poderá ser tratado, ajustado e/ou filtrado pelo Salesforce.
+
+Tópico 7 - Pontos em que houver falha na comunicação seja por inconsistência dados não mapeados, ou por revisão de processo, não estão sendo redirecionadas
+de maneira automática garantindo a criação do pedido, sem uma nova ação de criação do pedido pelo representante;
+Recomendação - Modelagem das excessões em que serão necessárias intervenções sejam pelos gerentes, ou pelos representantes.
+
+------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+List<Account> accList = new List<Account>();
+Integer n = 1000;
+Integer cont = 0;
+
+for (Integer i = 1; i <= n; i++) {
+    Account acc1 = new Account(
+        Name = 'Account Test Batch A '  + i,
+        CodigoVendedor__c = '222222');
+		cont++;
+    accList.add(acc1);
+}
+
+for (Integer i = 1; i <= n; i++) {
+    Account acc2 = new Account(
+        Name = 'Account Test Batch B '  + i,
+        CodigoVendedor__c = '123456');
+		cont++;
+    accList.add(acc2);
+}
+
+for (Integer i = 1; i <= n; i++) {
+    Account acc3 = new Account(
+        Name = 'Account Test Batch C '  + i,
+        CodigoVendedor__c = '777777');
+		cont++;
+    accList.add(acc3);
+}
+
+for (Integer i = 1; i <= n; i++) {
+    Account acc4 = new Account(
+        Name = 'Account Test Batch D '  + i,
+        CodigoVendedor__c = '000730');
+		cont++;
+    accList.add(acc4);
+}
+
+Database.insert(accList, false); 
+
+
+System.debug('Debug das ' + cont+' Contas Inseridas com Sucesso');
+
+
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+24/02/25 - Follow Up do Funcionamento
+
+F1- Compo cubagem total da tela de Frete e pagamento sempre retorna zerado;
+	- Campo Cubagem da API de produto alimentar o campo CubagemSKU__c.
+	
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+25/02/25 - Modelagem Vendas e Comissionamento
+
+	Com objetivo de centralização e automação das informações de performace e desenpenho no que tange a vendas e comissionamento. Consultivo, rápido e sem oneração para o usuário,
+pois todo o registro se dará de forma automatizada. Visando tanto o auto gerenciamento quanto acompanhamento em tempo real dos indicadores de performace.
+
+Relacionamentos:
+	- User (Compilação do vendedor)
+	- Opportunity (somarização da vendas)
+	- Account (Contabilização de clientes)
+	- Pedidos (Acompanhamento do que foi faturado e pagos)
+	
+Campos:
+	- Name (Concatenização Do Código de Vendedor + Nome do Vendedor + Mês e Ano) ✅
+	- Fechamentos ganhos ✅
+	- Fechamentos perdidos ✅
+	- Em Aberto ✅
+	- Ticket Médio ✅
+	- Melhor Cliente ✅
+	- Representação do principal Cliente ✅
+	- Ticket Médio do principal Cliente ✅
+	- Clientes Ativos ✅
+	- Clientes Inativos ✅
+	- Total em Vendas ✅
+	- Montante em Comissionamento ✅
+	- Data de Início ✅
+	- Data Final ✅
+	
+	
+Aplicabilidade do Desenvolvimento no Salesforce
+1. Viabilidade Técnica
+O Salesforce permite a criação de Custom Objects e automações via Flows, Apex Triggers e Process Builder, o que viabiliza esse desenvolvimento sem a necessidade de 
+grandes customizações. A integração com os objetos padrão (User, Opportunity, Account e Pedidos) pode ser feita via Lookup Relationships.
+
+2. Benefícios (Prós)
+✅ Automação de Dados: Redução do esforço manual, garantindo precisão nos indicadores.
+✅ Visão Unificada: Consolidação de informações relevantes em um único registro.
+✅ Facilidade de Acompanhamento: Indicadores gerados automaticamente e acessíveis em tempo real.
+✅ Possibilidade de Dashboards: Uso de relatórios e painéis gráficos no Salesforce para insights estratégicos.
+✅ Escalabilidade: Pode ser expandido para incluir mais métricas ou até mesmo IA para previsões de vendas.
+
+3. Desafios e Possíveis Contras
+⚠ Complexidade de Integração: Dependerá de uma correta modelagem dos relacionamentos com os objetos existentes.
+⚠ Performance e Cálculos: Caso o volume de dados seja muito grande, pode ser necessário otimizar a execução dos cálculos para evitar lentidão.
+⚠ Manutenção e Governança: Necessidade de revisões periódicas para manter a estrutura eficiente.
+⚠ Acuracidade dos Dados: Dependência da qualidade dos registros das Opportunities e Pedidos.
+
+Sugestão de Nome para o Custom Object
+🔹 "Sales Performance Tracker" (SPT)
+🔹 "Performance & Commission Dashboard" (PCD)
+🔹 "Vendas 360°"
+🔹 "Sales Insights Hub"
+🔹 "Comissionamento & Performance" (C&P)
+
+Caso a empresa tenha uma nomenclatura específica para o time comercial, podemos personalizar o nome do objeto conforme necessário.
+
+Conclusão
+O desenvolvimento desse Custom Object no Salesforce é uma iniciativa altamente aplicável e estratégica, trazendo automação, 
+precisão e eficiência ao acompanhamento de vendas e comissionamento. O sucesso da implementação dependerá de uma modelagem cuidadosa, 
+garantindo boa performance e usabilidade para os usuários finais. 🚀
+	
+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+26/02/25 - Execução de carga de Dados
+
+Comando:
+
+SincronizePricebooks.runSync();
+SincronizeProduct2.runSync();
+
+ SincronizePricebookEntryBatch batch = new SincronizePricebookEntryBatch();
+// Executa o batch
+Database.executeBatch(batch, 200); // O número 200 define o tamanho do lote
+
+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+26/02/25 - Codificando a Classe ComissionamentoPerformace
+
+Esboço
+
+        List<Opportunity> feListOpp = [
+            SELECT Id, Amount, Comissionamento__c, StageName 
+            FROM Opportunity 
+            WHERE Owner.Name = 'Fernanda Pradella'
+        ];
+        
+        List<Opportunity> feListOppWon = new List<Opportunity>();
+        List<Opportunity> feListOppLost = new List<Opportunity>();
+        List<Opportunity> feListOppPipe = new List<Opportunity>();
+
+        Decimal montanteVenda = 0;
+        Decimal montanteComissao = 0;
+        Decimal montanteAberto = 0;
+        Integer closedWon = 0;
+        Integer closedLost = 0;
+
+        for (Opportunity opp : feListOpp) {
+            if (opp.StageName == 'Closed Won') { 
+                feListOppWon.add(opp);
+                closedWon++;
+                montanteVenda += opp.Amount;
+                montanteComissao += (opp.Comissionamento__c != null ? opp.Comissionamento__c : 0);
+            } else if (opp.StageName == 'Closed Lost') {
+                feListOppLost.add(opp);
+                closedLost++;
+            } else {
+                feListOppPipe.add(opp);
+                montanteAberto += (opp.Amount != null ? opp.Amount : 0);
+            }
+        }
+
+        System.debug('Total Fechamentos Ganhos: ' + closedWon);
+        System.debug('Total Fechamentos Perdidos: ' + closedLost);
+        System.debug('Montante Vendido: ' + montanteVenda);
+        System.debug('Montante de Comissão: ' + montanteComissao);
+        System.debug('Montante em Aberto: ' + montanteAberto);
+		
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+05/03/25 - Debug para os KPIs
+
+List<Opportunity> testOppList = new List<Opportunity>();
+Integer increment = 1000;
+Integer passN = 0;
+
+for (Integer i = 1; i <= 3; i++) { // Oportunidades Ganhas do User
+    passN = passN + increment;
+    Opportunity oppsTestA1 = new Opportunity(
+        Name = 'Test2 Opportunity Closed Won FABRICA DE CORES ' + i,
+        StageName = 'Closed Won',
+        Amount = 2500 + passN,
+        CloseDate = Date.today().addDays(30),
+        OwnerId = '005Hr00000GPcmFIAT',
+        AccountId = '001be0000072Q6HAAU'
+    );
+    testOppList.add(oppsTestA1);
+}
+
+for (Integer i = 1; i <= 3; i++) { // Oportunidades Perdidas
+    passN = passN + increment;
+    Opportunity oppsTestA2 = new Opportunity(
+        Name = 'Test2 Opportunity Closed Lost FABRICA DE CORES ' + i,
+        StageName = 'Closed Lost',
+        Amount = 2500 + passN,
+        CloseDate = Date.today().addDays(30),
+        OwnerId = '005Hr00000GPcmFIAT',
+        AccountId = '001be0000072Q6HAAU'
+    );
+    testOppList.add(oppsTestA2);
+}
+
+for (Integer i = 1; i <= 3; i++) { // Oportunidades no Pipe
+    passN = passN + increment;
+    Opportunity oppsTestA3 = new Opportunity(
+        Name = 'Test2 Opportunity Análise de Credito e Risco FABRICA DE CORES ' + i,
+        StageName = 'Análise de Credito e Risco',
+        Amount = 2500 + passN,
+        CloseDate = Date.today().addDays(30),
+        OwnerId = '005Hr00000GPcmFIAT',
+        AccountId = '001be0000072Q6HAAU'
+    );
+    testOppList.add(oppsTestA3);
+}
+
+for (Integer i = 1; i <= 3; i++) { // Oportunidades Ganhas do User - KAIROS ENGENHARIA
+    passN = passN + increment;
+    Opportunity oppsTestB1 = new Opportunity(
+        Name = 'Test2 Opportunity Closed Won KAIROS ENGENHARIA ' + i,
+        StageName = 'Closed Won',
+        Amount = 1500 + passN,
+        CloseDate = Date.today().addDays(30),
+        OwnerId = '005Hr00000GPcmFIAT',
+        AccountId = '001be0000072QzBAAU'
+    );
+    testOppList.add(oppsTestB1);
+}
+
+for (Integer i = 1; i <= 3; i++) { // Oportunidades Perdidas - KAIROS ENGENHARIA
+    passN = passN + increment;
+    Opportunity oppsTestB2 = new Opportunity(
+        Name = 'Test2 Opportunity Closed Lost KAIROS ENGENHARIA ' + i,
+        StageName = 'Closed Lost',
+        Amount = 1500 + passN,
+        CloseDate = Date.today().addDays(30),
+        OwnerId = '005Hr00000GPcmFIAT',
+        AccountId = '001be0000072QzBAAU'
+    );
+    testOppList.add(oppsTestB2);
+}
+
+for (Integer i = 1; i <= 3; i++) { // Oportunidades no Pipe - KAIROS ENGENHARIA
+    passN = passN + increment;
+    Opportunity oppsTestB3 = new Opportunity(
+        Name = 'Test2 Opportunity Análise de Credito e Risco KAIROS ENGENHARIA ' + i,
+        StageName = 'Análise de Credito e Risco',
+        Amount = 1500 + passN,
+        CloseDate = Date.today().addDays(30),
+        OwnerId = '005Hr00000GPcmFIAT',
+        AccountId = '001be0000072QzBAAU'
+    );
+    testOppList.add(oppsTestB3);
+}
+
+// Inserindo todas as oportunidades
+insert testOppList;
+
+System.Debug('As opportunidades Testes inseridas são: ' +testOppList);
+
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+07/03/25 - Aperfeiçoamento do Sistema
+
+APS1- Atuaização da porcentagem em cada cliente seguindo a regra da tabela inter estadual, vide o link abaixo:
+https://nsdocs.com.br/blog/tabela-icms
+	1- Modelar (Bruno)
+	2- Desenvolver (Janderson)
+	3- Testar (Janderson)
+	4- Validar (Bruno)
+	5- Subir de Ambiente (Janderson)
+
+APS2- Disponibilizar apenas os clientes pertinentes aos Owners (Luiz)
+
+
+
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+08/03/25 - Construção da automação dos KPIs
+
+backup da OpportunityTriggerHandler
+
+
+
+public class OpportunityTriggerHandler {
+    
+    public static void handleOpportunityUpdate(List<Opportunity> newOpportunities, Map<Id, Opportunity> oldOpportunityMap) {
+        
+        List<Opportunity> oportunidadesAtualizadas = new List<Opportunity>();
+        
+        if (newOpportunities != null && oldOpportunityMap != null) {
+            for (Opportunity opp : newOpportunities) {
+                if (oldOpportunityMap.containsKey(opp.Id) && opp.Desconto__c != oldOpportunityMap.get(opp.Id).Desconto__c) {
+                    oportunidadesAtualizadas.add(opp);
+                }
+            }
+        }
+        
+        if (!oportunidadesAtualizadas.isEmpty()) {
+
+            Map<Id, ParametrosComissionamento__c> comissionamentoMap = 
+                BuscaParametrosComissionamento.getComissionamentoForOportunidades(oportunidadesAtualizadas);
+            
+            System.debug('Comissionamento Map: ' + JSON.serialize(comissionamentoMap));
+
+            List<Opportunity> oppKPI = new List<Opportunity>();
+
+            for (Opportunity opp : oportunidadesAtualizadas) {
+                if (comissionamentoMap.containsKey(opp.Id)) {
+                    ParametrosComissionamento__c comissionamento = comissionamentoMap.get(opp.Id);
+                    System.debug('comissionamento.Comissao__c: ' + comissionamento.Comissao__c);
+                    opp.Comissionamento__c = comissionamento.Comissao__c;
+                    oppKPI.add(opp);
+                } else {
+                    System.debug('Nenhum comissionamento encontrado para a Oportunidade ID: ' + oppKPI);
+                }
+            }
+            
+            if (!oppKPI.isEmpty()) {
+                ComissionamentoPerformace.saleUserList(oppKPI);
+                System.debug('Lista enviada para Comissionamento e Performance: ' + JSON.serialize(oppKPI));
+            }
+        }
+    }
+}
+
+
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+Desenvolvimento backend Apex (execução de instruções de controle de transação e fluxo no servidor da plataforma do Lightning em conjunto com as chamadas para a API da plataforma do Lightning).
+Automação (Elementos de atualização, criação e exclusão de registros de maneira eficiente, chamada de classes, criação de telas e ações);
+Configuração (Criação de apps, perfis, regras de validação, objetos e campos personalizados, tipos de registros, layouts, botões e usuários).
+Construção de chamadas assíncronas via Scheduled Job para execução de processos automatizados e integração de sistemas.
+Desenvolvimento de Batch Apex para processamento em larga escala de registros e otimização de desempenho.
+Criação e manutenção de Triggers para implementação de regras de negócio e automação de processos dentro da plataforma.
+Experiência com integração de sistemas utilizando APIs REST e SOAP.
+Sólida experiência com EXCEL, facilidade em deduzir e desenvolver algoritmos.
+Desenvolvimento, aprimoramento e gerenciamento de projetos.
+Simulação de processos, previsão e estimativa de custos.
+Aprimoramento e otimização de processos.
+
+
+000007 - Cód do Janderson
