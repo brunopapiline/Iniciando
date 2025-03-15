@@ -895,3 +895,13 @@ SELECT Id, CreatedDate,Owner.Name,Type_Event__c,ResponseCode__c,Request_Object__
 FROM Integration_Event_Log__c 
 WHERE ResponseCode__c Like '40%' 
 ORDER BY CreatedDate desc
+
+Anotação do curso de git e github
+1.git pull da branch principal
+2.geraruma nova branch à partir da branch principal
+3.trabalhar e adicionar novas funcionalidades na nova branch
+4.finalizar o trabalho na branch temporária
+5.git checkout na branch principal
+6.git pull
+7.mergiar(unir) o código da branch temporário com a branch principal(depois de testar)
+8.git push da branch principal
