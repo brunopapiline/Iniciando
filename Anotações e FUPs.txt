@@ -905,3 +905,5 @@ Anotação do curso de git e github
 6.git pull
 7.mergiar(unir) o código da branch temporário com a branch principal(depois de testar)
 8.git push da branch principal
+
+Finalizando o curso básico de gt

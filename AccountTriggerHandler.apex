@@ -24,7 +24,7 @@ public class AccountTriggerHandler {
                     codigoVendedorSet.add(acc.CodigoVendedor__c);
                 }
             }
-
+			//Checagem se há código do vendedor
             if (!codigoVendedorSet.isEmpty()) {
                 Database.executeBatch(new AccountBatchProcessor(codigoVendedorSet));
             }
